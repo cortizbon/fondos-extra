@@ -10,16 +10,18 @@ st.set_page_config(layout='wide')
 st.title("Fondos extrapresupuestales")
 
 df = pd.read_csv('fondos_limpios.csv')
+df[['obligacion_pc', 'compromiso_pc', 'orden_pago_pc']] /= 1_000_000_000
 VALS_DIC = {'Obligación': 'obligacion_pc',
                 'Compromiso': 'compromiso_pc',
                 'Orden de pago':'orden_pago_pc'}
 tab1, tab2, tab3 = st.tabs(['General', 'Diferenciado', 'Descarga general'])
 
+st.write("*Los valores están a precios constantes de 2024 y en miles de millones de pesos.")
+
 with tab1:
 
     st.header("Fondos extrapresupuestales (tipo de gasto)")
     var = st.selectbox("Seleccione una variable", ['Obligación', 'Compromiso', 'Orden de pago'])
-    df[VALS_DIC[var]] /= 1_000_000_000
     piv = df.pivot_table(index=['AÑO', 'Tipo de gasto'],
                    values=VALS_DIC[var],
                    aggfunc='sum').reset_index()  
@@ -67,7 +69,6 @@ with tab2:
 
     st.subheader("Fondos extrapresupuestales por sector (tipo de gasto)")
     sector = st.selectbox("Seleccione un sector", df['Sector'].unique().tolist(), key=10)
-    df[VALS_DIC[var]] /= 1_000_000_000
 
     fil_sec = df[df['Sector'] == sector]
     piv = fil_sec.pivot_table(index=['AÑO', 'Tipo de gasto'],
