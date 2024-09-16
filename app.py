@@ -4,12 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+from io import BytesIO
 
 st.set_page_config(layout='wide')
 
 st.title("Fondos extrapresupuestales")
 
 df = pd.read_csv('fondos_limpios.csv')
+df2 = df.copy()
 df[['obligacion_pc', 'compromiso_pc', 'orden_pago_pc']] /= 1_000_000_000
 VALS_DIC = {'Obligación': 'obligacion_pc',
                 'Compromiso': 'compromiso_pc',
@@ -95,4 +97,10 @@ with tab2:
 
 with tab3:
 
-    st.dataframe(df)
+    st.dataframe(df2)
+
+    binary_output = BytesIO()
+    df.to_excel(binary_output, index=False)
+    st.download_button(label = 'Descargar excel',
+                    data = binary_output.getvalue(),
+                    file_name = 'datos.xlsx')
