@@ -10,7 +10,7 @@ st.set_page_config(layout='wide')
 
 st.title("Fondos extrapresupuestales")
 
-df = pd.read_csv('fondos_limpios.csv')
+df = pd.read_csv('fondos_limpios.csv', low_memory=False)
 df2 = df.copy()
 df[['obligacion_pc', 'compromiso_pc', 'orden_pago_pc']] /= 1_000_000_000
 VALS_DIC = {'Obligación': 'obligacion_pc',
